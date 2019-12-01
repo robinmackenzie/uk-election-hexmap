@@ -180,7 +180,6 @@ function renderMap() {
 
   function updateInfo(d) {
     var data = config["data2017"].find(k => k["Id"] == d["key"]);
-    console.log(data);
 
     info.select('#constituencyName')
       .text(data.Summary.Constituency);

@@ -15,10 +15,6 @@ $(".region-toggles > div > input").change(function(evt) {
 // main
 async function main() {
 
-  $("#region-selections").multiselect({
-    "buttonWidth": 400
-  });
-
   config["hexjson"] = await d3.json("./constituencies.hex.json");
   config["data2015"] = await d3.json("./uk_ge_2015_v2.json");
   config["data2017"] = await d3.json("./uk_ge_2017_v2.json");

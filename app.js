@@ -2,14 +2,29 @@ var config = {}
 
 // jquery events
 $(main);
-$(".region-toggles > div > input").change(function(evt) {
+$(".region-button").click(function(evt) {
+  // update appearance
+  if ($(this).hasClass("btn-primary")) {
+    $(this).removeClass("btn-primary");
+    $(this).addClass("btn-default");
+  } else {
+    $(this).removeClass("btn-default");
+    $(this).addClass("btn-primary");
+  }
+  // update config and render map
   config["selectedRegions"] = [];
-  $(".region-toggles input").each(function(ix, el) {
-    if ($(el).prop("checked")) {
+  $(".region-button").each(function(ix, el) {
+    if ($(el).hasClass("btn-primary")) {
       config["selectedRegions"].push($(el).data("region"));
     } 
   });
   renderMap();
+});
+$(".result-button").click(function(evt) {
+  $(".result-button").each(function(ix, el) {
+    $(el).removeClass("btn-primary");
+  })
+  $(this).addClass("btn-primary");
 });
 
 // main
@@ -24,7 +39,7 @@ async function main() {
       "party": k["Summary"]["WinningParty2"], 
       "partyDescription": k["Summary"]["WinningParty3"], 
       "colour": k["Summary"]["PartyColour"]
-    }})
+    }});
   config["allPartyColours"] = [...new Set(allPartyColours.map(o => JSON.stringify(o)))].map(s => JSON.parse(s));
   config["partyColours"] = d3.scaleOrdinal()
     .domain(config["allPartyColours"].map(k => k["party"]))
@@ -36,7 +51,6 @@ async function main() {
 }
 
 function renderMap() {
-
 
   // Set the size and margins of the svg
 	var margin = {top: 10, right: 10, bottom: 10, left: 10},

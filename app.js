@@ -86,7 +86,6 @@ function renderMap() {
       hexjson["hexes"][key]["selected"] = 0;
     }
   });
-  console.log(hexjson)
 
   // Create the grid hexes and render them
   var grid = d3.getGridForHexJSON(config["hexjson"]);
@@ -125,17 +124,6 @@ function renderMap() {
     .attr("transform", function(hex) {
       return "translate(" + hex.x + "," + hex.y + ")";
     });
-
-
-  // var colour = d3.scaleOrdinal()
-  //   .domain(["EA", "EM", "LO", "NE", "NW", "SE", "SW", "WM", "YH", "NI", "SC", "WA"])
-  //   .range(d3.schemeSet1);
-
-  // var pops = Object.values(hexjson.hexes).map(h => h.p);
-  // console.log(pops);
-  // var colour = d3.scaleQuantize()
-  //   .domain([d3.min(pops), d3.max(pops)])
-  //   .range(d3.schemePiYG[7]);
 
   // Draw the polygons around each hex's centre
   hexmap
@@ -176,9 +164,6 @@ function renderMap() {
         .style("opacity", 0.4);
       updateInfo(d);
     }
-    // if (d.key == 'N06000007' || d.key == 'N06000009') {
-      // console.log(d)
-    // }
   }
 
   function hexLeave(d) {
@@ -191,14 +176,7 @@ function renderMap() {
 
   function zoomed() {
     g.attr("transform", d3.event.transform);
-    // g.selectAll("circle").attr("r", 1.5 / transform.k);
   }
-  // // Add the hex codes as labels
-  // hexmap
-  //   .append("text")
-  //   .append("tspan")
-  //   .attr("text-anchor", "middle")
-  //   .text(function(hex) {return hex.key;});
 
   function updateInfo(d) {
     var data = config["data2017"].find(k => k["Id"] == d["key"]);

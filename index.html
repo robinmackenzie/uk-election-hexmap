@@ -8,47 +8,33 @@
   </head>
   <body>
     <div class="container">
-      <div class="row region-select">
+      <div class="col-md-12">
+        <div class="row region-select">
           <h2>UK Hex Map</h2>
           <div class="btn-group">
-          <select id="region-selections" multiple="multiple">
-            <option value="EA" selected="selected">East Anglia</option>
-            <option value="EM" selected="selected">East Midlands</option>
-            <option value="LO" selected="selected">London</option>
-            <option value="NE" selected="selected">North East</option>
-            <option value="NW" selected="selected">North West</option>
-            <option value="SE" selected="selected">South East</option>
-            <option value="SW" selected="selected">South West</option>
-            <option value="YH" selected="selected">Yorkshire & Humber</option>
-            <option value="WM" selected="selected">West Midlands</option>
-            <option value="NI" selected="selected">Northern Ireland</option>
-            <option value="SC" selected="selected">Scotland</option>
-            <option value="WA" selected="selected">Wales</option>
-          </select>
+            <select id="region-selections" multiple="multiple">
+              <option value="EA" selected="selected">East Anglia</option>
+              <option value="EM" selected="selected">East Midlands</option>
+              <option value="LO" selected="selected">London</option>
+              <option value="NE" selected="selected">North East</option>
+              <option value="NW" selected="selected">North West</option>
+              <option value="SE" selected="selected">South East</option>
+              <option value="SW" selected="selected">South West</option>
+              <option value="YH" selected="selected">Yorkshire & Humber</option>
+              <option value="WM" selected="selected">West Midlands</option>
+              <option value="NI" selected="selected">Northern Ireland</option>
+              <option value="SC" selected="selected">Scotland</option>
+              <option value="WA" selected="selected">Wales</option>
+            </select>
+          </div>  
         </div>
-      </div>
-      <!-- <div class="row region-toggles">
-        <div class="col-md-12">
-          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="E England" data-off="E England" data-onstyle="success" data-offstyle="secondary" data-region="EA"></input>
-          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="E Midlands" data-off="E Midlands" data-onstyle="success" data-offstyle="secondary" data-region="EM"></input>
-          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="London" data-off="London" data-onstyle="success" data-offstyle="secondary" data-region="LO"></input>
-          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="North East" data-off="North East" data-onstyle="success" data-offstyle="secondary" data-region="NE"></input>
-          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="North West" data-off="North West" data-onstyle="success" data-offstyle="secondary" data-region="NW"></input>
-          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="South East" data-off="South East" data-onstyle="success" data-offstyle="secondary" data-region="SE"></input>
-          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="South West" data-off="South West" data-onstyle="success" data-offstyle="secondary" data-region="SW"></input>
-          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="Yorkshire" data-off="Yorkshire" data-onstyle="success" data-offstyle="secondary" data-region="YH"></input>
-          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="W Midlands" data-off="W Midlands" data-onstyle="success" data-offstyle="secondary" data-region="WM"></input>
-          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="N Ireland" data-off="N Ireland" data-onstyle="success" data-offstyle="secondary" data-region="NI"></input>
-          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="Scotland" data-off="Scotland" data-onstyle="success" data-offstyle="secondary" data-region="SC"></input>
-          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="Wales" data-off="Wales" data-onstyle="success" data-offstyle="secondary" data-region="WA"></input>
-        </div>
-      </div> -->
-      <div class="row">
-        <div class="col-md-7">
-          <div id="viz"></div>
-        </div>
-        <div class="col-md-5">
-          <div id="info"></div>
+        <div class="row">
+          <div class="col-md-7">
+            <div id="viz"></div>
+          </div>
+          <div class="col-md-5">
+            <div id="info"></div>
+          </div>
         </div>
       </div>
     </div>
@@ -68,6 +54,22 @@
         </svg>
       </div>
     </div>
+      <!-- <div class="row region-toggles">
+        <div class="col-md-12">
+          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="E England" data-off="E England" data-onstyle="success" data-offstyle="secondary" data-region="EA"></input>
+          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="E Midlands" data-off="E Midlands" data-onstyle="success" data-offstyle="secondary" data-region="EM"></input>
+          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="London" data-off="London" data-onstyle="success" data-offstyle="secondary" data-region="LO"></input>
+          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="North East" data-off="North East" data-onstyle="success" data-offstyle="secondary" data-region="NE"></input>
+          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="North West" data-off="North West" data-onstyle="success" data-offstyle="secondary" data-region="NW"></input>
+          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="South East" data-off="South East" data-onstyle="success" data-offstyle="secondary" data-region="SE"></input>
+          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="South West" data-off="South West" data-onstyle="success" data-offstyle="secondary" data-region="SW"></input>
+          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="Yorkshire" data-off="Yorkshire" data-onstyle="success" data-offstyle="secondary" data-region="YH"></input>
+          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="W Midlands" data-off="W Midlands" data-onstyle="success" data-offstyle="secondary" data-region="WM"></input>
+          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="N Ireland" data-off="N Ireland" data-onstyle="success" data-offstyle="secondary" data-region="NI"></input>
+          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="Scotland" data-off="Scotland" data-onstyle="success" data-offstyle="secondary" data-region="SC"></input>
+          <input type="checkbox" checked data-toggle="toggle" data-size="sm" data-on="Wales" data-off="Wales" data-onstyle="success" data-offstyle="secondary" data-region="WA"></input>
+        </div>
+      </div> -->
     <!-- js -->
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src=".\d3-hexjson.js"></script>

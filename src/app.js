@@ -18,7 +18,7 @@ $(".region-button").click(function(evt) {
       config["selectedRegions"].push($(el).data("region"));
     } 
   });
-  renderMap();
+  colorMap();
 });
 $(".result-button").click(function(evt) {
   $(".result-button").each(function(ix, el) {
@@ -30,9 +30,9 @@ $(".result-button").click(function(evt) {
 // main
 async function main() {
 
-  config["hexjson"] = await d3.json("./constituencies.hex.json");
-  config["data2015"] = await d3.json("./uk_ge_2015_v2.json");
-  config["data2017"] = await d3.json("./uk_ge_2017_v2.json");
+  config["hexjson"] = await d3.json("./mapdata/constituencies.hex.json");
+  config["data2015"] = await d3.json("./mapdata/uk_ge_2015_v2.json");
+  config["data2017"] = await d3.json("./mapdata/uk_ge_2017_v2.json");
   config["selectedRegions"] = ["EA", "EM", "LO", "NE", "NW", "SE", "SW", "WM", "YH", "NI", "SC", "WA"];
   const allPartyColours = config["data2017"]
     .map(k => { return {
@@ -47,10 +47,16 @@ async function main() {
   // Object.keys(config["hexjson"]["hexes"]).map(k => config["hexjson"]["hexes"]["2017"][k] = confgig["2017"][k]);
   // Object.keys(config["hexjson"]["hexes"]).map(k => config["hexjson"]["hexes"]["2015"][k] = confgig["2015"][k]);
   Object.keys(config["hexjson"]["hexes"]).forEach((k, i) => config["hexjson"]["hexes"][k]["key"] = k);
-  renderMap();
+  initMap();
 }
 
-function renderMap() {
+function colorMap() {
+  // get hexes
+  const hexes = d3.select("#viz > polygon");
+  hexes.attr("fill", function(d) {return "#fff"});  
+}
+
+function initMap() {
 
   // Set the size and margins of the svg
 	var margin = {top: 10, right: 10, bottom: 10, left: 10},

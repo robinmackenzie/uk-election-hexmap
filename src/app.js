@@ -1,7 +1,10 @@
 var config = {}
 
 // jquery events
+// run main on doc load
 $(main);
+
+// region button click handler
 $(".region-button").click(function(evt) {
   // update appearance
   if ($(this).hasClass("btn-primary")) {
@@ -18,13 +21,17 @@ $(".region-button").click(function(evt) {
       config["selectedRegions"].push($(el).data("region"));
     } 
   });
-  colorMap();
+  renderMap();
 });
+
+// result year click handler
 $(".result-button").click(function(evt) {
   $(".result-button").each(function(ix, el) {
     $(el).removeClass("btn-primary");
   })
   $(this).addClass("btn-primary");
+  config["resultYear"] = `data${$(this).data("resultyear")}`;
+  renderMap();
 });
 
 // main
@@ -33,30 +40,30 @@ async function main() {
   config["hexjson"] = await d3.json("./mapdata/constituencies.hex.json");
   config["data2015"] = await d3.json("./mapdata/uk_ge_2015_v2.json");
   config["data2017"] = await d3.json("./mapdata/uk_ge_2017_v2.json");
+
   config["selectedRegions"] = ["EA", "EM", "LO", "NE", "NW", "SE", "SW", "WM", "YH", "NI", "SC", "WA"];
+  config["resultYear"] = "data2017";
+
   const allPartyColours = config["data2017"]
     .map(k => { return {
       "party": k["Summary"]["WinningParty2"], 
       "partyDescription": k["Summary"]["WinningParty3"], 
       "colour": k["Summary"]["PartyColour"]
     }});
-  config["allPartyColours"] = [...new Set(allPartyColours.map(o => JSON.stringify(o)))].map(s => JSON.parse(s));
+
+    config["allPartyColours"] = [...new Set(allPartyColours.map(o => JSON.stringify(o)))].map(s => JSON.parse(s));
+
   config["partyColours"] = d3.scaleOrdinal()
     .domain(config["allPartyColours"].map(k => k["party"]))
     .range(config["allPartyColours"].map(k => k["colour"]));
   // Object.keys(config["hexjson"]["hexes"]).map(k => config["hexjson"]["hexes"]["2017"][k] = confgig["2017"][k]);
   // Object.keys(config["hexjson"]["hexes"]).map(k => config["hexjson"]["hexes"]["2015"][k] = confgig["2015"][k]);
   Object.keys(config["hexjson"]["hexes"]).forEach((k, i) => config["hexjson"]["hexes"][k]["key"] = k);
-  initMap();
+  renderMap();
 }
 
-function colorMap() {
-  // get hexes
-  const hexes = d3.select("#viz > polygon");
-  hexes.attr("fill", function(d) {return "#fff"});  
-}
-
-function initMap() {
+// render map
+function renderMap() {
 
   // Set the size and margins of the svg
 	var margin = {top: 10, right: 10, bottom: 10, left: 10},
@@ -66,7 +73,7 @@ function initMap() {
   // remove the existing viz
   d3.select("#viz").html(null);
 
-  // (re)create the svg element
+  // create the svg element
   var svg = d3
     .select("#viz")
     .append("svg")
@@ -92,7 +99,6 @@ function initMap() {
       hexjson["hexes"][key]["selected"] = 0;
     }
   });
-  console.log(hexjson)
 
   // Create the grid hexes and render them
   var grid = d3.getGridForHexJSON(config["hexjson"]);
@@ -132,28 +138,20 @@ function initMap() {
       return "translate(" + hex.x + "," + hex.y + ")";
     });
 
-
-  // var colour = d3.scaleOrdinal()
-  //   .domain(["EA", "EM", "LO", "NE", "NW", "SE", "SW", "WM", "YH", "NI", "SC", "WA"])
-  //   .range(d3.schemeSet1);
-
-  // var pops = Object.values(hexjson.hexes).map(h => h.p);
-  // console.log(pops);
-  // var colour = d3.scaleQuantize()
-  //   .domain([d3.min(pops), d3.max(pops)])
-  //   .range(d3.schemePiYG[7]);
-
   // Draw the polygons around each hex's centre
   hexmap
     .append("polygon")
     .attr("points", function(hex) {return hex.points;})
     .attr("stroke", "white")
     .attr("stroke-width", "2")
-    // .attr("fill", function(hex) {return hex.selected ? colour(hex.a) : "#f0f0f0"}) // "#b0e8f0")
+    .attr("result", function(hex) {
+      let result = (config[config["resultYear"]].find(k => k["Id"] == [hex["key"]]))["Summary"]; 
+      return result;
+    })
     .attr("fill", function(hex) {
-      let party = (config["data2017"].find(k => k["Id"] == [hex["key"]]))["Summary"]["WinningParty2"];
+      let party = (config[config["resultYear"]].find(k => k["Id"] == [hex["key"]]))["Summary"]["WinningParty2"];
       return hex.selected ? config["partyColours"](party) : "#f0f0f0";
-    }) // "#b0e8f0")
+    })
     .on("mouseover", hexOver)
     .on("mouseleave", hexLeave);
     
@@ -182,32 +180,21 @@ function initMap() {
         .style("opacity", 0.4);
       updateInfo(d);
     }
-    // if (d.key == 'N06000007' || d.key == 'N06000009') {
-      // console.log(d)
-    // }
   }
 
   function hexLeave(d) {
     if (d.selected) {
       d3.select(this)
         .style("opacity", 1)
-
     }
   }
 
   function zoomed() {
     g.attr("transform", d3.event.transform);
-    // g.selectAll("circle").attr("r", 1.5 / transform.k);
   }
-  // // Add the hex codes as labels
-  // hexmap
-  //   .append("text")
-  //   .append("tspan")
-  //   .attr("text-anchor", "middle")
-  //   .text(function(hex) {return hex.key;});
 
   function updateInfo(d) {
-    var data = config["data2017"].find(k => k["Id"] == d["key"]);
+    var data = config[config["resultYear"]].find(k => k["Id"] == d["key"]);
     console.log(data);
 
     info.select('#constituencyName')

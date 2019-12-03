@@ -62,6 +62,39 @@ async function main() {
   renderMap();
 }
 
+// render results bar
+function renderResultsBar() {
+  var svg = d3
+    .select("#resultsBar")
+    .append("svg")
+    .attr("width", 500)
+    .attr("height", 30)
+    .append("g");
+
+  var p = "WinningParty2";
+  var data = config[config["resultYear"]]
+    .map(k => k["Summary"])
+    .reduce((acc, k) => {
+      (acc[k[p]] = acc[k[p]] || []).push(k);
+      return acc;
+    }, {});
+  console.log(data);
+
+  var partyOrder = ["LAB", "GRN", "SNP", "PC", "SDLP", "SF", "LD", "IND", "SPK", "UKIP", "UUP", "DUP", "CON"];
+
+  var data2 = partyOrder.map(p => {
+    if(data[p]) {
+      return {
+        "party": p,
+        "seats": data[p]
+      }  
+    }
+  });
+
+  
+
+}
+
 // render map
 function renderMap() {
 
@@ -195,7 +228,6 @@ function renderMap() {
 
   function updateInfo(d) {
     var data = config[config["resultYear"]].find(k => k["Id"] == d["key"]);
-    console.log(data);
 
     info.select('#constituencyName')
       .text(data.Summary.Constituency);

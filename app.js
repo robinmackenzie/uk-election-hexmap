@@ -169,8 +169,7 @@ function renderMap() {
   function hexLeave(d) {
     if (d.selected) {
       d3.select(this)
-        .style("opacity", 1)
-
+        .style("opacity", 1)  
     }
   }
 

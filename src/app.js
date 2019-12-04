@@ -1,7 +1,10 @@
 var config = {}
 
 // jquery events
+// run main on doc load
 $(main);
+
+// region button click handler
 $(".region-button").click(function(evt) {
   // update appearance
   if ($(this).hasClass("btn-primary")) {
@@ -20,27 +23,36 @@ $(".region-button").click(function(evt) {
   });
   renderMap();
 });
+
+// result year click handler
 $(".result-button").click(function(evt) {
   $(".result-button").each(function(ix, el) {
     $(el).removeClass("btn-primary");
   })
   $(this).addClass("btn-primary");
+  config["resultYear"] = `data${$(this).data("resultyear")}`;
+  renderMap();
 });
 
 // main
 async function main() {
 
-  config["hexjson"] = await d3.json("./constituencies.hex.json");
-  config["data2015"] = await d3.json("./uk_ge_2015_v2.json");
-  config["data2017"] = await d3.json("./uk_ge_2017_v2.json");
+  config["hexjson"] = await d3.json("./mapdata/constituencies.hex.json");
+  config["data2015"] = await d3.json("./mapdata/uk_ge_2015_v2.json");
+  config["data2017"] = await d3.json("./mapdata/uk_ge_2017_v2.json");
+
   config["selectedRegions"] = ["EA", "EM", "LO", "NE", "NW", "SE", "SW", "WM", "YH", "NI", "SC", "WA"];
+  config["resultYear"] = "data2017";
+
   const allPartyColours = config["data2017"]
     .map(k => { return {
       "party": k["Summary"]["WinningParty2"], 
       "partyDescription": k["Summary"]["WinningParty3"], 
       "colour": k["Summary"]["PartyColour"]
     }});
-  config["allPartyColours"] = [...new Set(allPartyColours.map(o => JSON.stringify(o)))].map(s => JSON.parse(s));
+
+    config["allPartyColours"] = [...new Set(allPartyColours.map(o => JSON.stringify(o)))].map(s => JSON.parse(s));
+
   config["partyColours"] = d3.scaleOrdinal()
     .domain(config["allPartyColours"].map(k => k["party"]))
     .range(config["allPartyColours"].map(k => k["colour"]));
@@ -50,6 +62,40 @@ async function main() {
   renderMap();
 }
 
+// render results bar
+function renderResultsBar() {
+  var svg = d3
+    .select("#resultsBar")
+    .append("svg")
+    .attr("width", 500)
+    .attr("height", 30)
+    .append("g");
+
+  var p = "WinningParty2";
+  var data = config[config["resultYear"]]
+    .map(k => k["Summary"])
+    .reduce((acc, k) => {
+      (acc[k[p]] = acc[k[p]] || []).push(k);
+      return acc;
+    }, {});
+  console.log(data);
+
+  var partyOrder = ["LAB", "GRN", "SNP", "PC", "SDLP", "SF", "LD", "IND", "SPK", "UKIP", "UUP", "DUP", "CON"];
+
+  var data2 = partyOrder.map(p => {
+    if(data[p]) {
+      return {
+        "party": p,
+        "seats": data[p]
+      }  
+    }
+  });
+
+  
+
+}
+
+// render map
 function renderMap() {
 
   // Set the size and margins of the svg
@@ -60,7 +106,7 @@ function renderMap() {
   // remove the existing viz
   d3.select("#viz").html(null);
 
-  // (re)create the svg element
+  // create the svg element
   var svg = d3
     .select("#viz")
     .append("svg")
@@ -131,11 +177,14 @@ function renderMap() {
     .attr("points", function(hex) {return hex.points;})
     .attr("stroke", "white")
     .attr("stroke-width", "2")
-    // .attr("fill", function(hex) {return hex.selected ? colour(hex.a) : "#f0f0f0"}) // "#b0e8f0")
+    .attr("result", function(hex) {
+      let result = (config[config["resultYear"]].find(k => k["Id"] == [hex["key"]]))["Summary"]; 
+      return result;
+    })
     .attr("fill", function(hex) {
-      let party = (config["data2017"].find(k => k["Id"] == [hex["key"]]))["Summary"]["WinningParty2"];
+      let party = (config[config["resultYear"]].find(k => k["Id"] == [hex["key"]]))["Summary"]["WinningParty2"];
       return hex.selected ? config["partyColours"](party) : "#f0f0f0";
-    }) // "#b0e8f0")
+    })
     .on("mouseover", hexOver)
     .on("mouseleave", hexLeave);
     
@@ -169,7 +218,7 @@ function renderMap() {
   function hexLeave(d) {
     if (d.selected) {
       d3.select(this)
-        .style("opacity", 1)  
+        .style("opacity", 1)
     }
   }
 
@@ -178,7 +227,7 @@ function renderMap() {
   }
 
   function updateInfo(d) {
-    var data = config["data2017"].find(k => k["Id"] == d["key"]);
+    var data = config[config["resultYear"]].find(k => k["Id"] == d["key"]);
 
     info.select('#constituencyName')
       .text(data.Summary.Constituency);

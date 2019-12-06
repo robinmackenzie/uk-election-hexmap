@@ -134,6 +134,9 @@ function renderResultsBar() {
     .attr("width", function(d) {return sc(d.seats);})
     .attr("height", 100)
     .attr("fill", function(d) {return d.colour;})
+    .on("mouseenter", function(d) {
+      console.log(d);
+    })
 
 }
 

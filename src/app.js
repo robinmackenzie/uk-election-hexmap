@@ -21,6 +21,7 @@ $(".region-button").click(function(evt) {
       config["selectedRegions"].push($(el).data("region"));
     } 
   });
+  renderResultsBar();
   renderMap();
 });
 
@@ -31,6 +32,7 @@ $(".result-button").click(function(evt) {
   })
   $(this).addClass("btn-primary");
   config["resultYear"] = `data${$(this).data("resultyear")}`;
+  renderResultsBar();
   renderMap();
 });
 
@@ -59,7 +61,7 @@ async function main() {
   // Object.keys(config["hexjson"]["hexes"]).map(k => config["hexjson"]["hexes"]["2017"][k] = confgig["2017"][k]);
   // Object.keys(config["hexjson"]["hexes"]).map(k => config["hexjson"]["hexes"]["2015"][k] = confgig["2015"][k]);
   Object.keys(config["hexjson"]["hexes"]).forEach((k, i) => config["hexjson"]["hexes"][k]["key"] = k);
-  // renderMap();
+  renderMap();
   renderResultsBar();
 }
 
@@ -69,6 +71,10 @@ function renderResultsBar() {
   // svg container for results bar
   var width = document.getElementById("resultsBar").clientWidth; 
   var height = 30;
+
+  // remove old viz
+  d3.select("#resultsBar svg").remove();
+
   var svg = d3
     .select("#resultsBar")
     .append("svg")

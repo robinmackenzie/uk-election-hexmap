@@ -59,18 +59,23 @@ async function main() {
   // Object.keys(config["hexjson"]["hexes"]).map(k => config["hexjson"]["hexes"]["2017"][k] = confgig["2017"][k]);
   // Object.keys(config["hexjson"]["hexes"]).map(k => config["hexjson"]["hexes"]["2015"][k] = confgig["2015"][k]);
   Object.keys(config["hexjson"]["hexes"]).forEach((k, i) => config["hexjson"]["hexes"][k]["key"] = k);
-  renderMap();
+  // renderMap();
+  renderResultsBar();
 }
 
 // render results bar
 function renderResultsBar() {
+
+  // svg container for results bar
+  var width = document.getElementById("resultsBar").clientWidth; 
+  var height = 30;
   var svg = d3
     .select("#resultsBar")
     .append("svg")
-    .attr("width", 500)
-    .attr("height", 30)
-    .append("g");
+    .attr("width", width)
+    .attr("height", height);
 
+  // arrange results data
   var p = "WinningParty2";
   var data = config[config["resultYear"]]
     .map(k => k["Summary"])
@@ -78,20 +83,51 @@ function renderResultsBar() {
       (acc[k[p]] = acc[k[p]] || []).push(k);
       return acc;
     }, {});
-  console.log(data);
 
+  // party order - 'left' to 'right'
   var partyOrder = ["LAB", "GRN", "SNP", "PC", "SDLP", "SF", "LD", "IND", "SPK", "UKIP", "UUP", "DUP", "CON"];
 
+  // arrange seat count to party order
   var data2 = partyOrder.map(p => {
     if(data[p]) {
       return {
         "party": p,
-        "seats": data[p]
+        "seats": data[p].length,
+        "colour": config["partyColours"](p)
       }  
     }
-  });
+  }).filter(k => k);
 
-  
+  // get cumulative count 
+  // https://stackoverflow.com/questions/20477177/creating-an-array-of-cumulative-sum-in-javascript
+  var cumsum = (sum => value => sum += value)(0);
+  var data3 = data2.map(k => k.seats).map(cumsum);
+  data3.unshift(0);
+  data3.splice(-1);
+  data2.map((k, i) => k["cumseats"] = data3[i]);
+
+  // total seats
+  var totalSeats = data2
+    .map(k => k.seats)
+    .reduce((c, a) => c + a, 0);
+
+  // scale for d3
+  var sc = d3.scaleLinear()
+    .domain([0, totalSeats]) // max seats
+    .range([0, width]) // svg width
+
+  // viz
+  svg
+    .append("g")
+    .selectAll(".partyRect")
+    .data(data2)
+    .enter()
+    .append("rect")
+    .attr("x", function(d) {return sc(d.cumseats);})
+    .attr("y", 0)
+    .attr("width", function(d) {return sc(d.seats);})
+    .attr("height", 100)
+    .attr("fill", function(d) {return d.colour;})
 
 }
 

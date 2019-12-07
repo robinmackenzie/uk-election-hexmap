@@ -99,7 +99,7 @@ function renderResultsBar() {
   var p = "WinningParty2";
   var data = config[config["resultYear"]]
     .map(k => k["Summary"])
-    .filter(k => config["selectedRegions"].indexOf(config["regionMap"][k.Region] > -1))
+    .filter(k => config["selectedRegions"].indexOf(config["regionMap"][k.Region]) > -1)
     .reduce((acc, k) => {
       (acc[k[p]] = acc[k[p]] || []).push(k);
       return acc;

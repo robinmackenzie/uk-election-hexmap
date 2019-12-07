@@ -137,6 +137,13 @@ function renderResultsBar() {
     .domain([0, totalSeats]) // max seats
     .range([0, width]) // svg width
 
+  // tip
+  var tip = d3.tip().attr('class', 'd3-tip').direction('e').offset([0,5])
+    .html(function(d) {
+      return `${d.party}: ${d.seats}`;
+    });
+  svg.call(tip);
+
   // viz
   svg
     .append("g")
@@ -149,9 +156,8 @@ function renderResultsBar() {
     .attr("width", function(d) {return sc(d.seats);})
     .attr("height", 100)
     .attr("fill", function(d) {return d.colour;})
-    .on("mouseenter", function(d) {
-      console.log(d);
-    })
+    .on('mouseover', tip.show)
+    .on('mouseout', tip.hide);
 
 }
 

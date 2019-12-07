@@ -105,7 +105,7 @@ function renderResultsBar() {
       return acc;
     }, {});
 
-  // party order - "left" to "right"
+  // party order - 'left' to 'right'
   var partyOrder = ["LAB", "GRN", "SNP", "PC", "SDLP", "SF", "LD", "IND", "SPK", "UKIP", "UUP", "DUP", "CON"];
 
   // arrange seat count to party order
@@ -238,7 +238,7 @@ function renderMap() {
       return "translate(" + hex.x + "," + hex.y + ")";
     });
 
-  // Draw the polygons around each hex"s centre
+  // Draw the polygons around each hex's centre
   hexmap
     .append("polygon")
     .attr("points", function(hex) {return hex.points;})

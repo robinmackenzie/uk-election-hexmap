@@ -83,8 +83,8 @@ async function main() {
 function renderResultsBar() {
 
   // svg container for results bar
-  var width = document.getElementById("resultsBar").clientWidth; 
-  var height = 30;
+  var svgWidth = document.getElementById("resultsBar").clientWidth; 
+  var svgHeight = 30; //document.getElementById("resultsBar").clientHeight;
 
   // remove old viz
   d3.select("#resultsBar svg").remove();
@@ -92,8 +92,8 @@ function renderResultsBar() {
   var svg = d3
     .select("#resultsBar")
     .append("svg")
-    .attr("width", width)
-    .attr("height", height);
+    .attr("width", svgWidth)
+    .attr("height", svgHeight);
 
   // arrange results data
   var p = "WinningParty2";
@@ -135,13 +135,14 @@ function renderResultsBar() {
   // scale for d3
   var sc = d3.scaleLinear()
     .domain([0, totalSeats]) // max seats
-    .range([0, width]) // svg width
+    .range([0, svgWidth]) // svg width
 
   // tip
-  var tip = d3.tip().attr('class', 'd3-tip').direction('e').offset([0,5])
-    .html(function(d) {
-      return `${d.party}: ${d.seats}`;
-    });
+  var tip = d3.tip()
+    .attr('class', 'd3-tip')
+    .direction('s')
+    .offset([0,5])
+    .html(function(d) {return `${d.party}: ${d.seats}`;});
   svg.call(tip);
 
   // viz
@@ -154,7 +155,7 @@ function renderResultsBar() {
     .attr("x", function(d) {return sc(d.cumseats);})
     .attr("y", 0)
     .attr("width", function(d) {return sc(d.seats);})
-    .attr("height", 100)
+    .attr("height", svgHeight)
     .attr("fill", function(d) {return d.colour;})
     .on('mouseover', tip.show)
     .on('mouseout', tip.hide);

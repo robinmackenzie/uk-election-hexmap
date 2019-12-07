@@ -105,7 +105,7 @@ function renderResultsBar() {
       return acc;
     }, {});
 
-  // party order - 'left' to 'right'
+  // party order - "left" to "right"
   var partyOrder = ["LAB", "GRN", "SNP", "PC", "SDLP", "SF", "LD", "IND", "SPK", "UKIP", "UUP", "DUP", "CON"];
 
   // arrange seat count to party order
@@ -139,8 +139,8 @@ function renderResultsBar() {
 
   // tip
   var tip = d3.tip()
-    .attr('class', 'd3-tip')
-    .direction('s')
+    .attr("class", "d3-tip")
+    .direction("s")
     .offset([0,5])
     .html(function(d) {return `${d.party}: ${d.seats}`;});
   svg.call(tip);
@@ -157,8 +157,8 @@ function renderResultsBar() {
     .attr("width", function(d) {return sc(d.seats);})
     .attr("height", svgHeight)
     .attr("fill", function(d) {return d.colour;})
-    .on('mouseover', tip.show)
-    .on('mouseout', tip.hide);
+    .on("mouseover", tip.show)
+    .on("mouseout", tip.hide);
 
 }
 
@@ -220,7 +220,7 @@ function renderMap() {
       return "translate(" + hex.x + "," + hex.y + ")";
     });
 
-	// Draw the polygons around each grid hex's centre
+	// Draw the polygons around each grid hex"s centre
 	hexgrid
 		.append("polygon")
 		.attr("points", function(hex) {return hex.points;})
@@ -238,7 +238,7 @@ function renderMap() {
       return "translate(" + hex.x + "," + hex.y + ")";
     });
 
-  // Draw the polygons around each hex's centre
+  // Draw the polygons around each hex"s centre
   hexmap
     .append("polygon")
     .attr("points", function(hex) {return hex.points;})
@@ -272,7 +272,7 @@ function renderMap() {
 
   // info panel init
   var info = d3.select("#info")
-    .html(d3.select('#infoPanelTemplate').html());
+    .html(d3.select("#infoPanelTemplate").html());
     
   function hexOver(d) {
     if (d.selected) {
@@ -296,24 +296,19 @@ function renderMap() {
   function updateInfo(d) {
     var data = config[config["resultYear"]].find(k => k["Id"] == d["key"]);
 
-    info.select('#constituencyName')
-      .text(data.Summary.Constituency);
-    info.select('#winningCandidateName')
-      .text('Winner: ' + data.Summary.WinningCandidate);
-    info.select('#winningPartyName')
-      .text('Winner: ' + data.Summary.WinningPartyName);
-    info.select('#partyColourBlock')
-      .style('background-color', data.Summary.PartyColour)
-      .style('height', '5px')
-      .style('width', '100%');
-    info.select('#electorate')
-      .text('Electorate: ' + data.Summary.Electorate.toLocaleString('en-uk'));
-    info.select('#turnout')
-      .text('Turnout: ' + data.Summary.ValidVotes.toLocaleString('en-uk'));
-    info.select('#votes')
-      .text('Votes for winner: ' + data.Summary.WinningVoteCount.toLocaleString('en-uk'));
-    info.select('#share')
-      .text('Winning share: ' + data.Summary.ValidVotePercent.toLocaleString('en-uk', {'style': 'percent'}));
+    info.select("#constituencyName").text(data.Summary.Constituency);
+    info.select("#winningCandidateName").text("Winner: " + data.Summary.WinningCandidate);
+    info.select("#winningPartyName").text("Winner: " + data.Summary.WinningPartyName);
+    info.select("#voteStatisticsLabel").text("Vote Statistics");
+    info.select("#partyColourBlock")
+      .style("background-color", data.Summary.PartyColour)
+      .style("height", "5px")
+      .style("width", "100%");
+    info.select("#electorate").text("Electorate: " + data.Summary.Electorate.toLocaleString("en-uk"));
+    info.select("#turnout").text("Turnout: " + data.Summary.ValidVotes.toLocaleString("en-uk"));
+    info.select("#votes").text("Votes for winner: " + data.Summary.WinningVoteCount.toLocaleString("en-uk"));
+    info.select("#share").text("Winning share: " + data.Summary.ValidVotePercent.toLocaleString("en-uk", {"style": "percent"}));
+    info.select("#voteBreakdownLabel").text("Vote Breakdown");
 
     // votes bar chart
     // amended from https://bl.ocks.org/alandunning/7008d0332cc28a826b37b3cf6e7bd998
@@ -322,9 +317,9 @@ function renderMap() {
     // get voting data
     var votesRaw = data.CandidateVoteInfo.map(function(k) {
       return {
-        'party': k.PartyAbbrevTransformed, 
-        'votes': k.Votes, 
-        'color': k.PartyColour 
+        "party": k.PartyAbbrevTransformed, 
+        "votes": k.Votes, 
+        "color": k.PartyColour 
       };
     });
     // sum over duplicate keys e.g. OTH
@@ -351,47 +346,47 @@ function renderMap() {
     var y = d3.scaleBand().range([height, 0]);
 
     // remove old g from chart svg
-    info.select('#svgVotes')
-      .select('g')
+    info.select("#svgVotes")
+      .select("g")
       .remove();
     
     // add new g to chart svg
     var g = info 
-      .select('#svgVotes') 
-      .attr('height', height + 20)
-      .append('g')
-      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+      .select("#svgVotes") 
+      .attr("height", height + 20)
+      .append("g")
+      .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
     // set up axes
     x.domain([0, d3.max(votes, function(d) { return d.votes; })]);
     y.domain(votes.map(function(d) { return d.party; })).padding(0.1);
 
     // append new g to chart svg
-    g.append('g')
-      .attr('class', 'y axis')
+    g.append("g")
+      .attr("class", "y axis")
       .call(d3.axisLeft(y));
 
     // add bars per votes data using party color
     // set up a g element for each entry in votes array
-    var bars = g.selectAll('.bar')
+    var bars = g.selectAll(".bar")
       .data(votes)
       .enter();
       
     // append a rect for each g and set color, x, y, height and width
-    bars.append('rect')
-      .style('fill', function(d) {
+    bars.append("rect")
+      .style("fill", function(d) {
         return d.color;
       })
-      .attr('x', 0)
-      .attr('height', y.bandwidth() )
-      .attr('y', function(d) { return y(d.party); })
-      .attr('width', function(d) { return x(d.votes); });
+      .attr("x", 0)
+      .attr("height", y.bandwidth() )
+      .attr("y", function(d) { return y(d.party); })
+      .attr("width", function(d) { return x(d.votes); });
 
     // append a label just after rect with vote count
-    bars.append('text')
-      .attr('x', function(d) { return x(d.votes) + 4; })
-      .attr('y', function(d, i) { return y(d.party) + (y.bandwidth() / 2); })
-      .attr('dy', '.35em')
-      .text(function(d) { return d.votes.toLocaleString('en-uk'); });
+    bars.append("text")
+      .attr("x", function(d) { return x(d.votes) + 4; })
+      .attr("y", function(d, i) { return y(d.party) + (y.bandwidth() / 2); })
+      .attr("dy", ".35em")
+      .text(function(d) { return d.votes.toLocaleString("en-uk"); });
   }
 }

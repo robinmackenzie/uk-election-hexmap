@@ -44,6 +44,20 @@ async function main() {
   config["data2017"] = await d3.json("./mapdata/uk_ge_2017_v2.json");
 
   config["selectedRegions"] = ["EA", "EM", "LO", "NE", "NW", "SE", "SW", "WM", "YH", "NI", "SC", "WA"];
+  config["regionMap"] = {
+    "East": "EA",
+    "East Midlands": "EM",
+    "London": "LO",
+    "North East": "NE",
+    "North West": "NW",
+    "South East": "SE",
+    "South West": "SW",
+    "West Midlands": "WM",
+    "Yorkshire and The Humber": "YH",
+    "Northern Ireland": "NI",
+    "Scotland": "SC",
+    "Wales": "WA"
+  }
   config["resultYear"] = "data2017";
 
   const allPartyColours = config["data2017"]
@@ -85,6 +99,7 @@ function renderResultsBar() {
   var p = "WinningParty2";
   var data = config[config["resultYear"]]
     .map(k => k["Summary"])
+    .filter(k => config["selectedRegions"].indexOf(config["regionMap"][k.Region] > -1))
     .reduce((acc, k) => {
       (acc[k[p]] = acc[k[p]] || []).push(k);
       return acc;

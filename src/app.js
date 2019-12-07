@@ -283,6 +283,7 @@ function renderMap() {
   }
 
   function hexLeave(d) {
+    info.attr("style", "display: none;");
     if (d.selected) {
       d3.select(this)
         .style("opacity", 1)
@@ -295,6 +296,8 @@ function renderMap() {
 
   function updateInfo(d) {
     var data = config[config["resultYear"]].find(k => k["Id"] == d["key"]);
+
+    info.attr("style", "display: block;")
 
     info.select("#constituencyName").text(data.Summary.Constituency);
     info.select("#winningCandidateName").text("Winner: " + data.Summary.WinningCandidate);
